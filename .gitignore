@@ -1,9 +1,4 @@
-﻿# ============================================================
-# Standard .NET / WPF .gitignore
-# Source code ditampilkan untuk keperluan prototyping
-# ============================================================
-
-# --- Build output ---
+﻿# --- Build output ---
 bin/
 obj/
 
@@ -30,9 +25,6 @@ Desktop.ini
 crash_log.txt
 *.tmp
 
-# ============================================================
-# File sensitif --- JANGAN PERNAH COMMIT
-# ============================================================
 *.env
 .env.*
 secrets.json
