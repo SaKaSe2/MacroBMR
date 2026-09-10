@@ -1,0 +1,131 @@
+<Window x:Class="MacroBMR.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OverlayWindow" Height="28" Width="28"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize"
+        WindowStartupLocation="Manual" SizeToContent="WidthAndHeight"
+        FontFamily="Segoe UI">
+    <Grid Background="#01000000">
+        <!-- Compact Badge / Collapsed Pill -->
+        <Border x:Name="CollapsedView" Background="#DC2626" CornerRadius="14" 
+                Width="28" Height="28" Cursor="Hand" Opacity="0.95"
+                MouseLeftButtonDown="CollapsedView_Click" ToolTip="Buka Panel Macro">
+            <Border.Effect>
+                <DropShadowEffect Color="#64748B" Opacity="0.25" BlurRadius="6" ShadowDepth="2" Direction="270"/>
+            </Border.Effect>
+            <TextBlock Text="M" Foreground="White" FontWeight="Bold" FontSize="12"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- Compact Floating Pill Bar / Expanded View -->
+        <Border x:Name="ExpandedView" Background="#FFFFFF" CornerRadius="15" 
+                BorderBrush="#E2E8F0" BorderThickness="1" Opacity="0.98" Padding="5,2"
+                Visibility="Collapsed">
+            <Border.Effect>
+                <DropShadowEffect Color="#64748B" Opacity="0.18" BlurRadius="10" ShadowDepth="2" Direction="270"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Countdown Indicator -->
+                <TextBlock x:Name="TxtCountdown" Width="36" Margin="0,0,4,0"
+                           Foreground="#2563EB" FontWeight="Bold" FontSize="10" 
+                           VerticalAlignment="Center" TextAlignment="Right"
+                           Text="" Visibility="Collapsed"/>
+
+                <!-- Iteration ComboBox -->
+                <ComboBox x:Name="CmbIteration" Width="60" Height="22" Margin="0,0,3,0"
+                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                          FontWeight="SemiBold" FontSize="10" Foreground="#0F172A" Background="#F8FAFC"
+                          SelectionChanged="CmbIteration_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextAlignment="Center" Foreground="#0F172A"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                
+                <!-- Stop Button -->
+                <Button x:Name="BtnStop" Content="Stop" Width="44" Height="22" Margin="0,0,3,0"
+                        Background="#DC2626" Foreground="White" FontWeight="SemiBold" FontSize="10"
+                        BorderThickness="0" Cursor="Hand" PreviewMouseLeftButtonDown="BtnStop_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="11"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!-- Pause/Resume Button -->
+                <Button x:Name="BtnPause" Content="Pause" Width="46" Height="22" Margin="0,0,3,0"
+                        Background="#D97706" Foreground="White" FontWeight="SemiBold" FontSize="10"
+                        BorderThickness="0" Cursor="Hand" PreviewMouseLeftButtonDown="BtnPause_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="11"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!-- Fix Target Button -->
+                <Button x:Name="BtnFixTarget" Content="Fix" Width="38" Height="22"
+                        Background="#4F46E5" Foreground="White" FontWeight="SemiBold" FontSize="10"
+                        BorderThickness="0" Cursor="Hand" PreviewMouseLeftButtonDown="BtnFixTarget_Click">
+                    <Button.ContextMenu>
+                        <ContextMenu Background="#FFFFFF" BorderBrush="#E2E8F0">
+                            <MenuItem Header="Rekam Ulang Target Saat Ini" Click="MenuRecordCurrent_Click"/>
+                            <MenuItem Header="Rekam Ulang Target Sebelumnya" Click="MenuRecordPrevious_Click"/>
+                            <MenuItem Header="Rekam Target Alternatif (Fallback)" Click="MenuRecordFallback_Click"/>
+                            <MenuItem Header="Atur Persentase Kecocokan Target" Click="MenuEditThreshold_Click"/>
+                            <MenuItem Header="Atur Waktu Tunggu Smart Playback" Click="MenuEditSmartWait_Click"/>
+                            <Separator Background="#E2E8F0"/>
+                            <MenuItem Header="Sisipkan Rekaman Sebelumnya" Click="MenuInsertBefore_Click"/>
+                            <MenuItem Header="Sisipkan Rekaman Setelah Ini" Click="MenuInsertAfter_Click"/>
+                            <MenuItem Header="Sisipkan Rekaman ke Nomor..." Click="MenuInsertAt_Click"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="11"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!-- Speed Button -->
+                <Button x:Name="BtnSpeed" Content="1x" Width="32" Height="22" Margin="3,0,0,0"
+                        Background="#475569" Foreground="White" FontWeight="SemiBold" FontSize="10"
+                        BorderThickness="0" Cursor="Hand" PreviewMouseLeftButtonDown="BtnSpeed_Click">
+                    <Button.ContextMenu>
+                        <ContextMenu Background="#FFFFFF" BorderBrush="#E2E8F0">
+                            <MenuItem Header="Edit Waktu (Aksi Saat Ini)..." Click="MenuEditSingleTime_Click"/>
+                            <Separator Background="#E2E8F0"/>
+                            <MenuItem Header="0.25x (Sangat Lambat)" Tag="0.25" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="0.5x (Lambat)" Tag="0.5" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="0.75x" Tag="0.75" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="1x (Normal)" Tag="1.0" IsChecked="True" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="1.5x" Tag="1.5" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="2x (Cepat)" Tag="2.0" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="3x" Tag="3.0" Click="MenuSpeed_Click"/>
+                            <MenuItem Header="5x (Sangat Cepat)" Tag="5.0" Click="MenuSpeed_Click"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="11"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!-- Collapse Button -->
+                <Button Content="✕" Width="20" Height="20" Margin="3,0,0,0"
+                        Background="#F1F5F9" Foreground="#64748B" FontWeight="Bold" FontSize="9"
+                        BorderThickness="0" Cursor="Hand" PreviewMouseLeftButtonDown="BtnCollapse_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

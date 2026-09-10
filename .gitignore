@@ -1,0 +1,48 @@
+﻿# ============================================================
+# Standard .NET / WPF .gitignore
+# Source code ditampilkan untuk keperluan prototyping
+# ============================================================
+
+# --- Build output ---
+bin/
+obj/
+
+# --- IDE & Visual Studio ---
+.vs/
+*.suo
+*.user
+*.DotSettings
+
+# --- VS Code / Rider ---
+.vscode/
+.idea/
+
+# --- NuGet ---
+*.nupkg
+
+# --- OS ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Logs & temp ---
+*.log
+crash_log.txt
+*.tmp
+
+# ============================================================
+# File sensitif --- JANGAN PERNAH COMMIT
+# ============================================================
+*.env
+.env.*
+secrets.json
+appsettings.secrets.json
+appsettings.local.json
+apikeys.json
+api_keys.json
+
+# --- Tools internal agent ---
+.agents/
+
+# Archives
+*.zip

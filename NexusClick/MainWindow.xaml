@@ -1,0 +1,153 @@
+<Window x:Class="NexusClick.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:NexusClick.ViewModels"
+        Title="Nexus Click" Height="650" Width="900"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+    
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Border Background="{StaticResource AppBackground}" CornerRadius="20" ClipToBounds="True">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <Border Grid.Column="0" Background="{StaticResource CardBackground}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,1,0">
+                <StackPanel Margin="20">
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,40">
+                        <materialDesign:PackIcon Kind="CursorDefaultClick" Width="32" Height="32" Foreground="{StaticResource AccentColor}" />
+                        <TextBlock Text="NEXUS" FontWeight="Black" FontSize="22" Foreground="{StaticResource AccentColor}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                        <TextBlock Text="CLICK" FontWeight="Light" FontSize="22" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Status Display -->
+                    <Border CornerRadius="12" Background="#F8F9FA" Padding="15" Margin="0,0,0,30">
+                        <StackPanel>
+                            <TextBlock Text="STATUS" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextSecondary}" />
+                            <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="Bold" Foreground="{Binding StatusColor}" Margin="0,5,0,0" />
+                            <TextBlock Text="{Binding HotkeyText}" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </Border>
+                    
+                    <Button Content="{Binding ActionButtonText}" Command="{Binding ToggleStartCommand}" 
+                            Background="{StaticResource AccentColor}" Foreground="White"
+                            Height="50" materialDesign:ButtonAssist.CornerRadius="12"
+                            FontSize="16" FontWeight="Bold" Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                        <Setter Property="Background" Value="#E53935" /> <!-- Red when running -->
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content -->
+            <Grid Grid.Column="1" Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Header / Window Controls -->
+                <Grid Grid.Row="0" Margin="0,0,0,20" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent">
+                    <TextBlock Text="Configuration" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="—" Style="{StaticResource MaterialDesignFlatButton}" Foreground="{StaticResource TextSecondary}" Click="Minimize_Click" />
+                        <Button Content="✕" Style="{StaticResource MaterialDesignFlatButton}" Foreground="{StaticResource TextSecondary}" Click="Close_Click" />
+                    </StackPanel>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel>
+                        <!-- Click Interval Card -->
+                        <Border Style="{StaticResource PremiumCard}" Padding="25" Margin="0,0,0,20">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <materialDesign:PackIcon Kind="TimerOutline" Width="20" Height="20" Foreground="{StaticResource AccentColor}" />
+                                    <TextBlock Text="Click Interval" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="10,0,0,0" />
+                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" materialDesign:HintAssist.Hint="Hours" Text="{Binding Hours}" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                    <TextBox Grid.Column="1" materialDesign:HintAssist.Hint="Minutes" Text="{Binding Minutes}" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                    <TextBox Grid.Column="2" materialDesign:HintAssist.Hint="Seconds" Text="{Binding Seconds}" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                    <TextBox Grid.Column="3" materialDesign:HintAssist.Hint="Milliseconds" Text="{Binding Milliseconds}" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Click Options Card -->
+                        <Border Style="{StaticResource PremiumCard}" Padding="25" Margin="0,0,0,20">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <materialDesign:PackIcon Kind="MouseVariant" Width="20" Height="20" Foreground="{StaticResource AccentColor}" />
+                                    <TextBlock Text="Click Options" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="10,0,0,0" />
+                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <ComboBox Grid.Column="0" materialDesign:HintAssist.Hint="Mouse Button" SelectedIndex="{Binding MouseButtonIndex}" Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                        <ComboBoxItem Content="Left Click" />
+                                        <ComboBoxItem Content="Right Click" />
+                                        <ComboBoxItem Content="Middle Click" />
+                                    </ComboBox>
+
+                                    <ComboBox Grid.Column="2" materialDesign:HintAssist.Hint="Click Type" SelectedIndex="{Binding ClickTypeIndex}" Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                        <ComboBoxItem Content="Single Click" />
+                                        <ComboBoxItem Content="Double Click" />
+                                    </ComboBox>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Advanced & Humanization Card -->
+                        <Border Style="{StaticResource PremiumCard}" Padding="25">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <materialDesign:PackIcon Kind="RobotOutline" Width="20" Height="20" Foreground="{StaticResource AccentColor}" />
+                                    <TextBlock Text="Humanization &amp; Position" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="10,0,0,0" />
+                                </StackPanel>
+                                
+                                <CheckBox Content="Randomize Interval (±20ms) - Prevents Detection" IsChecked="{Binding UseRandomization}" Margin="0,0,0,15" Foreground="{StaticResource TextSecondary}" />
+                                
+                                <TextBlock Text="Cursor Position" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,5" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="Dynamic (Follow Cursor)" IsChecked="{Binding FollowCursor}" Margin="0,0,20,0" Foreground="{StaticResource TextPrimary}" />
+                                    <RadioButton Content="Fixed Position" IsChecked="{Binding FixedPosition}" Foreground="{StaticResource TextPrimary}" />
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" IsEnabled="{Binding FixedPosition}">
+                                    <TextBox materialDesign:HintAssist.Hint="X" Text="{Binding FixedX}" Width="80" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                    <TextBox materialDesign:HintAssist.Hint="Y" Text="{Binding FixedY}" Width="80" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                                    <Button Content="Pick Location" Command="{Binding PickLocationCommand}" Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="{StaticResource AccentColor}" BorderBrush="{StaticResource AccentColor}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
